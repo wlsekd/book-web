@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaclimb.book.dao.ListBookMapper">
+    <resultMap id="BaseResultMap" type="com.javaclimb.book.domain.ListBook" >
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="book_id" jdbcType="INTEGER" property="bookId"/>
+        <result column="book_list_id" jdbcType="INTEGER" property="bookListId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,book_id,book_list_id
+    </sql>
+    <!--     useGeneratedKeys="true" keyProperty="id"-->
+    <insert id="insert" parameterType="com.javaclimb.book.domain.ListBook">
+        insert into list_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bookId != null">
+                book_id,
+            </if>
+            <if test="bookListId != null">
+                book_list_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="bookId != null">
+                #{bookId},
+            </if>
+            <if test="bookListId != null">
+                #{bookListId},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.javaclimb.book.domain.ListBook">
+        update list_book
+        <set>
+            <if test="bookId != null">
+                book_id = #{bookId},
+            </if>
+            <if test="bookListId != null">
+                book_list_id = #{bookListId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from list_book where id=#{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"></include>
+        from list_book
+        where id = #{id}
+    </select>
+
+    <select id="allListBook" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from list_book
+    </select>
+
+    <select id="listBookOfBookListId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"></include>
+        from list_book
+        where book_list_id=#{bookListId}
+    </select>
+
+    <delete id="deleteByBookIdAndBookListId" parameterType="java.util.HashMap">
+        delete from list_book where book_id=#{bookId} and book_list_id=#{bookListId}
+    </delete>
+
+
+</mapper>

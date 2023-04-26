@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaclimb.book.dao.CollectionMapper">
+    <resultMap id="BaseResultMap" type="com.javaclimb.book.domain.Collect" >
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="book_id" jdbcType="INTEGER" property="bookId"/>
+        <result column="book_list_id" jdbcType="INTEGER" property="bookListId"/>
+        <result column="author_id" jdbcType="INTEGER" property="authorId"/>
+        <result column="collect_time" jdbcType="DATE" property="collectTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,user_id,type,book_id,book_list_id,author_id,collect_time
+    </sql>
+
+    <insert id="insert" parameterType="com.javaclimb.book.domain.Comment">
+        insert into collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="bookId != null">
+                book_id,
+            </if>
+            <if test="bookListId != null">
+                book_list_id,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            collect_time,
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="bookId != null">
+                #{bookId},
+            </if>
+            <if test="bookListId != null">
+                #{bookListId},
+            </if>
+            <if test="authorId != null">
+                #{authorId},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <delete id="delete" parameterType="com.javaclimb.book.domain.Comment">
+        delete from collect
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="bookId != null">
+                and book_id = #{bookId}
+            </if>
+            <if test="bookListId != null">
+                and book_list_id = #{bookListId}
+            </if>
+            <if test="authorId != null">
+                and author_id = #{authorId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="delByUserIdAndBookId" >
+        delete from collect where user_id=#{userId} and book_id=#{bookId}
+    </delete>
+
+    <select id="allCollect" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from collect
+    </select>
+
+    <select id="collectOfUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"></include>
+        from collect
+        where user_id = #{UserId}
+    </select>
+
+    <select id="existBookId" resultType="java.lang.Integer" >
+        select count(*)
+        from collect
+        where book_id = #{bookId} and user_id=#{userId}
+    </select>
+
+    <select id="exist" resultType="java.lang.Integer" parameterType="com.javaclimb.book.domain.Comment">
+        select count(*)
+        from collect
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="bookId != null">
+                and book_id = #{bookId}
+            </if>
+            <if test="bookListId != null">
+                and book_list_id = #{bookListId}
+            </if>
+            <if test="authorId != null">
+                and author_id = #{authorId}
+            </if>
+        </where>
+    </select>
+</mapper>
